@@ -1,0 +1,21 @@
+sudo: required
+language: node_js
+node_js: "10"
+dist: trusty
+cache:
+  yarn: true
+  directories:
+    - node_modules
+install:
+  - export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1
+  - npm install -g lighthouse
+before_script:
+  - export DISPLAY=:99.0
+  - export CHROME_PATH="$(which google-chrome-stable)"
+  - sh -e /etc/init.d/xvfb start
+  - google-chrome-stable --version
+script:
+  - lighthouse https://portal.auone.jp/ --output=json --output-path=./report.json --save-assets
+  - cat report.json
+addons:
+  chrome: stable
